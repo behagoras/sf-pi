@@ -6,8 +6,7 @@ SF DevBar renders two non-blocking Salesforce-oriented terminal surfaces:
 
 - a **top bar** with SF Pi branding, model and thinking level, workspace, Git
   state, context usage, optional session name, and non-default image width;
-- a **bottom bar** with active gateway usage, SF Pi package count, Salesforce DX
-  project and authenticated org context, plus Slack readiness when useful.
+- a **bottom bar** with active gateway usage, SF Pi package count, session cost already recorded by Pi, Salesforce DX project and authenticated org context, plus Slack readiness when useful.
 
 Each source loads independently from cached or reactive state. `NO_COLOR` keeps
 the same text and layout while removing SF DevBar-owned ANSI styling.
@@ -58,6 +57,8 @@ cache-first, so a cold authenticated lookup can take longer than later sessions.
 **Context says `unknown`:** Immediately after compaction, Pi can know the window
 size while the percentage is unavailable. The percentage returns after the next
 assistant turn.
+
+**Session cost is hidden:** The footer only sums cost values already recorded by Pi. Providers that report no marginal cost leave this segment empty.
 
 **The gateway badge color is unexpected:** It follows the active model provider
 identity. Verify the selected provider/model in Pi before changing colors.

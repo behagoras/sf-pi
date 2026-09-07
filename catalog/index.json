@@ -421,7 +421,7 @@
     ],
     "docs": {
       "intentGroup": "Work with Salesforce orgs",
-      "summary": "Two non-blocking status bars: a top widget with model/thinking/session/git/context, and a custom footer with project-scoped org info, monthly LLM-gateway budget, and active extension counts.",
+      "summary": "Two non-blocking status bars: a top widget with model/thinking/session/git/context, and a custom footer with project-scoped org info, monthly LLM-gateway budget, recorded session cost, and active extension counts.",
       "primaryFiles": [
         "index.ts",
         "lib/top-bar.ts",
@@ -433,7 +433,7 @@
     "entry": "extensions/sf-devbar/index.ts",
     "hasReadme": true,
     "hasTests": true,
-    "srcLoc": 2392
+    "srcLoc": 2468
   },
   {
     "id": "sf-docs",
