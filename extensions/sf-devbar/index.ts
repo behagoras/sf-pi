@@ -48,6 +48,11 @@ import { markBootStep } from "../../lib/common/boot-timing.ts";
 import { registerLatestContextProjection } from "../../lib/common/session/active-branch-context.ts";
 import { shouldInjectOnce } from "../../lib/common/session/inject-once.ts";
 import {
+  formatSessionCostSegment,
+  recordedSessionCostFromEntries,
+  resetSessionCostCache,
+} from "./lib/session-cost.ts";
+import {
   getCachedSfEnvironment,
   getSharedSfEnvironment,
   refreshSharedSfEnvironment,
@@ -225,6 +230,7 @@ export default function sfDevBar(pi: ExtensionAPI) {
     refreshDevbarSettings(ctx.cwd);
     const orgEnv = displayEnv ?? env;
     return {
+      sessionCost: formatSessionCostSegment(recordedSessionCostFromEntries(ctx.sessionManager)),
       orgName: orgEnv?.org?.alias ?? orgEnv?.org?.username ?? orgEnv?.config?.targetOrg,
       orgType: orgEnv?.org?.orgType,
       projectDetected: orgEnv?.project?.detected,
@@ -312,6 +318,7 @@ export default function sfDevBar(pi: ExtensionAPI) {
   // --- Session start: activate bars ---
   pi.on("session_start", async (_event, ctx) => {
     const generation = beginActiveSession(ctx);
+    resetSessionCostCache();
 
     // Check --no-devbar flag. Extension flags are registered without the CLI
     // `--` prefix; passing the prefixed form falls through to undefined.
@@ -457,6 +464,7 @@ export default function sfDevBar(pi: ExtensionAPI) {
   // otherwise leave stale footer/widget rows behind until the next repaint.
   pi.on("session_shutdown", async (_event, ctx) => {
     endActiveSession(ctx);
+    resetSessionCostCache();
     if (!ctx.hasUI) return;
     displayEnv = null;
     displayOrgStale = false;

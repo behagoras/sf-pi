@@ -244,6 +244,7 @@ Jump to an extension's Troubleshooting section to see the full fix. This index i
 - The bars do not appear
 - The org segment stays pending
 - Context says `unknown`
+- Session cost is hidden
 - The gateway badge color is unexpected
 - An `img:Nc` pill appears
 

@@ -161,7 +161,16 @@ describe("renderBottomBarParts", () => {
     expect(right).not.toContain("💰 $665.52/∞");
   });
 
-  it("orders bottom-left segments as cost, packages, then SFDX org", () => {
+  it("includes the recorded session cost on the left", () => {
+    const { left, right } = renderBottomBarParts(
+      makeState({ sessionCost: "$0.42 session" }),
+      stubTheme,
+    );
+    expect(left).toContain("$0.42 session");
+    expect(right).not.toContain("$0.42");
+  });
+
+  it("orders bottom-left segments as monthly cost, packages, session cost, then SFDX org", () => {
     const extStatuses = new Map([
       ["sf-pi", "📦 SF Pi Packages: 11/11 extensions"],
       ["sf-llm-gateway", "💰 $12.34/∞"],
@@ -169,6 +178,7 @@ describe("renderBottomBarParts", () => {
     const { left } = renderBottomBarParts(
       makeState({
         extensionStatuses: extStatuses,
+        sessionCost: "$0.42 session",
         orgName: "Example-Dev",
         orgType: "sandbox",
         orgDetected: true,
@@ -177,7 +187,8 @@ describe("renderBottomBarParts", () => {
       stubTheme,
     );
     expect(left.indexOf("💰 $12.34/∞")).toBeLessThan(left.indexOf("SF Pi Packages"));
-    expect(left.indexOf("SF Pi Packages")).toBeLessThan(left.indexOf("SFDX Project →"));
+    expect(left.indexOf("SF Pi Packages")).toBeLessThan(left.indexOf("$0.42 session"));
+    expect(left.indexOf("$0.42 session")).toBeLessThan(left.indexOf("SFDX Project →"));
     expect(left.indexOf("SFDX Project →")).toBeLessThan(left.indexOf("Example-Dev"));
   });
 

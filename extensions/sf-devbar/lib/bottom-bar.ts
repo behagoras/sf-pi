@@ -5,11 +5,12 @@
  * Segments in order (left-aligned):
  *   1.  LLM gateway monthly cost
  *   2.  SF Pi package count
- *   3.  SFDX project → authenticated org + type badge, only inside a
+ *   3.  Session cost recorded by Pi
+ *   4.  SFDX project → authenticated org + type badge, only inside a
  *       Salesforce DX project
  *
  * Right-aligned:
- *   4.  Slack connection pill
+ *   5.  Slack connection pill
  *
  * Token usage, connection status, and SF CLI version/freshness are
  * intentionally omitted — the top bar context window and SF Welcome already
@@ -43,6 +44,8 @@ const LEFT_STATUS_ORDER = ["sf-llm-gateway", "sf-pi"];
 const RIGHT_STATUS_KEYS = new Set(["sf-slack-status"]);
 
 export type BottomBarState = {
+  /** Session cost recorded by Pi, pre-rendered for the footer. */
+  sessionCost?: string;
   /** Org alias or username. */
   orgName?: string;
   /** Org type for badge rendering. */
@@ -112,7 +115,13 @@ export function renderBottomBarParts(
     }
   }
 
-  // 3. SFDX project → org + type badge. Keep org context project-scoped so a
+  // 3. Cost already recorded by Pi for this session. This stays separate from
+  // the gateway's authoritative monthly usage status.
+  if (state.sessionCost) {
+    leftSegments.push(theme.fg("dim", state.sessionCost));
+  }
+
+  // 4. SFDX project → org + type badge. Keep org context project-scoped so a
   // global default org does not appear while the user is outside a Salesforce
   // folder. The "SFDX Project" prefix is the explicit environment indicator.
   if (state.projectDetected) {
